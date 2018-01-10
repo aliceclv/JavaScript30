@@ -58,6 +58,33 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // Only looking for one => Other wise: querySelectorAll
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+    if (!audio) return; // stop function from running
+    audio.currentTime = 0; // rewind to the start
+    audio.play();
+    key.classList.add('playing');
+  }
+
+  // http://putaindecode.io/fr/articles/js/es2015/arrow-functions/
+
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return; // skip if it's not a transform
+    this.classList.remove('playing'); // refers to the key
+  }
+
+  // `this` in a function like that in ES6 doesn't work
+  // removeTransition = (e) => {
+  //   if (e.propertyName !== 'transform') return; // skip if it's not a transform
+  //   console.log(this);
+  //   this.classList.remove('playing'); // refers to the key
+  // }
+
+  window.addEventListener('keydown', playSound);
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 
 </script>
 
